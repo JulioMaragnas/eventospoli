@@ -15,6 +15,12 @@ const SideMenu = () => {
         <Item key="registerEvent">
             <Link to="/newEvent"> Registrar nuevo </Link>
         </Item>
+        <Item key="commentEvent">
+            <Link to="/commentEvent"> Comentar Evento </Link>
+        </Item>
+        <Item key="registerManagers">
+            <Link to="/registerManager"> Registrar Organizadores </Link>
+        </Item>
       </SubMenu>
       <SubMenu key="atendees" icon={<UserOutlined />} title="Asistentes">
         <Item key="registerAtendee">

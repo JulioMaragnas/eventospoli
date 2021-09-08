@@ -7,6 +7,8 @@ import Footer from './shared/Footer';
 import Event from './core/Event';
 import EvenList from './core/EventList';
 import Atendees from './core/Atendees';
+import Managers from './core/Managers';
+import Comment from './core/Comment';
 
 function App() {
   return (
@@ -29,6 +31,12 @@ function App() {
               </Route>
               <Route path="/registerAtendees">
                 <Atendees></Atendees>
+              </Route>
+              <Route path="/registerManager">
+                <Managers></Managers>
+              </Route>
+              <Route path="/commentEvent">
+                <Comment></Comment>
               </Route>
             </Switch>
           </div>

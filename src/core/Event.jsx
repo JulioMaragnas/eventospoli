@@ -6,6 +6,7 @@ import {
   GetCategories,
   GetCities,
 } from '../infraestruture/retrieveData';
+import { SaveEvent } from '../infraestruture/saveData';
 import { Form, Input, Button, Select, DatePicker } from 'antd';
 
 const { Item } = Form;
@@ -36,8 +37,36 @@ class Event extends React.Component {
     });
   }
 
-  async saveData(formData) {
-    console.log(formData)
+  async saveData({ event: formData }) {
+    const { managers, speakers, categories } = this.state;
+    debugger;
+    let conference = {
+      id: null,
+      nombre: formData.name,
+      descripcion: formData.description,
+      telefono: formData.phone,
+      fecha: formData.date.toISOString(),
+      ubicacion: {
+        lugar: formData.place,
+        direccion: formData.address,
+        ciudad: formData.city,
+      },
+      sede: formData.site,
+      organizadores: managers.filter((mng) =>
+        formData.managers.some((dmng) => mng.nombreFacultad === dmng)
+      ),
+      conferencistas: speakers.filter((spk) =>
+        formData.speakers.some((dspk) => spk.nombreUsuario === dspk)
+      ),
+      categorias: categories.filter((ctg) =>
+        formData.categories.some((dctg) => ctg.nombreUsuario === dctg)
+      ),
+      asistentes: [],
+      comentarios: [],
+    };
+
+    const res = await SaveEvent(conference);
+    
   }
 
   render() {
@@ -71,10 +100,7 @@ class Event extends React.Component {
             >
               <DatePicker></DatePicker>
             </Item>
-            <Item
-              label='Telefono'
-              name={['event', 'phone']}
-            >
+            <Item label='Telefono' name={['event', 'phone']}>
               <Input></Input>
             </Item>
             <Item
@@ -97,7 +123,7 @@ class Event extends React.Component {
             <Item label='Ciudad' name={['event', 'city']}>
               <Select>
                 {this.state.cities.map((city) => (
-                  <Select.Option key={city.codigo} value={city.codigo}>
+                  <Select.Option key={city.nombre} value={city.nombre}>
                     {city.nombre}
                   </Select.Option>
                 ))}
@@ -143,7 +169,10 @@ class Event extends React.Component {
             >
               <TextArea></TextArea>
             </Item>
-            <Button type="primary" htmlType='submit '> Registrar evento </Button>
+            <Button type='primary' htmlType='submit '>
+              {' '}
+              Registrar evento{' '}
+            </Button>
           </Form>
         </div>
       </Fragment>
@@ -153,7 +182,8 @@ class Event extends React.Component {
 
 export default Event;
 
-{/*
+{
+  /*
 rules={[
                 {
                   type: 'number',
@@ -161,4 +191,5 @@ rules={[
                   required: true,
                 },
               ]}
-*/}
+*/
+}

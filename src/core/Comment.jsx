@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
 import '../App.css';
 import { Form, Input, Button, Select } from 'antd';
+import { GetEvents } from '../infraestruture/retrieveData';
+import { SaveEvent } from '../infraestruture/saveData'
 
 const { Item } = Form;
 const { TextArea } = Input;
@@ -9,33 +11,24 @@ class Comments extends React.Component {
   constructor() {
     super();
     this.state = {
-      events: [
-        {
-          id: 1,
-          nombre: 'Negocios digitales',
-        },
-        {
-          id: 2,
-          nombre: 'Ceiba Dev Fest',
-        },
-        {
-          id: 3,
-          nombre: 'Webinar Desarrollo FullStack',
-        },
-        {
-          id: 4,
-          nombre: 'Design thinking',
-        },
-        {
-          id: 5,
-          nombre: 'Redes neuronales',
-        },
-        {
-          id: 6,
-          nombre: 'AWS',
-        },
-      ],
+      events: [],
     };
+  }
+
+  async componentDidMount(){
+    const events = await GetEvents();
+    this.setState({
+      events
+    })
+  }
+
+  async saveData({comment}) {
+    const conference = this.state.events.find(conf => conf.id === comment.event);
+    conference = {
+      ...conference,
+      comentarios: comment.comment
+    }
+    const res = await SaveEvent()
   }
 
   render() {
@@ -78,8 +71,7 @@ class Comments extends React.Component {
               <TextArea></TextArea>
             </Item>
             <Button type='primary' htmlType='submit '>
-              {' '}
-              Comentar evento{' '}
+              Comentar evento
             </Button>
           </Form>
         </div>

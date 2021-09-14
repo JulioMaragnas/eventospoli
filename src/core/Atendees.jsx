@@ -34,7 +34,7 @@ class Atendees extends React.Component {
   }
 
   async saveData({atendee}){
-    const conf = this.state.find(conf => conf.id === atendee.event)
+    const conf = this.state.events.find(conf => conf.id === atendee.event)
     const conference = {
       ...conf,
       asistentes: [...conf.asistentes, {

@@ -58,8 +58,9 @@ class EventList extends React.Component {
   async componentDidMount() {
 
     const datasource = await GetEvents();
+    debugger
     let categories = datasource
-      .reduce((cat, ev) => [...cat, ...ev.categorias], [])
+      .reduce((cat, ev) => [...cat, ...ev.categorias.map(c => c.nombre)], [])
       .filter((cat, index, self) => self.indexOf(cat) === index)
       .map((cat) => ({ text: cat, value: cat }));
 
@@ -76,7 +77,7 @@ class EventList extends React.Component {
           render: (cat)=> (<>
             {
               cat.map(x => (
-                <Tag color="blue" key={x}> { x } </Tag>
+                <Tag color="blue" key={x.nombre}> { x.nombre } </Tag>
               ))
             }
           </>)

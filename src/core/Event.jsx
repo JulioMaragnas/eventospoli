@@ -39,7 +39,6 @@ class Event extends React.Component {
 
   async saveData({ event: formData }) {
     const { managers, speakers, categories } = this.state;
-    debugger;
     let conference = {
       id: null,
       nombre: formData.name,

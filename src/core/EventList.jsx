@@ -6,11 +6,6 @@ import { GetEvents } from '../infraestruture/retrieveData';
 class EventList extends React.Component {
   columns = [
     {
-      title: 'Identificador',
-      dataIndex: 'id',
-      key: 'id',
-    },
-    {
       title: 'Nombre',
       dataIndex: 'nombre',
       key: 'nombre',
@@ -31,6 +26,20 @@ class EventList extends React.Component {
       key: 'fecha',
     },
     {
+      title: 'Ubicación',
+      dataIndex: 'ubicacion',
+      key: 'ubicacion',
+      render: (location) => (
+        <>
+          {
+            <span>
+              {location.direccion} - {location.ciudad} - {location.lugar}
+            </span>
+          }
+        </>
+      ),
+    },
+    {
       title: 'Sede',
       dataIndex: 'sede',
       key: 'sede',
@@ -39,11 +48,27 @@ class EventList extends React.Component {
       title: 'Organizadores',
       dataIndex: 'organizadores',
       key: 'organizadores',
+      render: (managers) => (
+        <>
+          {managers.map((manager) => (
+            <span> {manager.nombreFacultad}, </span>
+          ))}
+        </>
+      ),
     },
     {
       title: 'Conferencistas',
-      dataIndex: 'conferencias',
-      key: 'conferencias',
+      dataIndex: 'conferencistas',
+      key: 'conferencistas',
+      render: (speakers) => (
+        <>
+          {speakers.map((speaker) => (
+            <span>
+              {speaker.nombre} - {speaker.relacionInstitucion}
+            </span>
+          ))}
+        </>
+      ),
     },
   ];
 
@@ -51,16 +76,16 @@ class EventList extends React.Component {
     super();
     this.state = {
       columns: this.columns,
-      dataSource: []
-    }
+      dataSource: [],
+    };
   }
 
   async componentDidMount() {
-
     const datasource = await GetEvents();
-    debugger
+    // const { data: datasource } = await GetEvents();
+    debugger;
     let categories = datasource
-      .reduce((cat, ev) => [...cat, ...ev.categorias.map(c => c.nombre)], [])
+      .reduce((cat, ev) => [...cat, ...ev.categorias.map((c) => c.nombre)], [])
       .filter((cat, index, self) => self.indexOf(cat) === index)
       .map((cat) => ({ text: cat, value: cat }));
 
@@ -73,17 +98,19 @@ class EventList extends React.Component {
           dataIndex: 'categorias',
           key: 'categorias',
           filters: categories,
-          onFilter: (value, record) => record.categorias.indexOf(value) >= 0,
-          render: (cat)=> (<>
-            {
-              cat.map(x => (
-                <Tag color="blue" key={x.nombre}> { x.nombre } </Tag>
-              ))
-            }
-          </>)
+          onFilter: (value, record) => record.categorias.some(ctg => ctg.nombre === value),
+          render: (cat) => (
+            <>
+              {cat.map((x) => (
+                <Tag color='blue' key={x.nombre}>
+                  {x.nombre}
+                </Tag>
+              ))}
+            </>
+          ),
         },
-      ]
-    })
+      ],
+    });
   }
 
   render() {
